@@ -7,18 +7,18 @@ import (
 	"net/url"
 
 	"reverse_proxy/internal/proxy"
+	"reverse_proxy/internal/testutil"
 )
 
 func main() {
-	targetURL := flag.String("target", "http://localhost:8080", "Target server URL")
 	listenAddr := flag.String("listen", ":8000", "Listen address")
 	flag.Parse()
 
-	target, err := url.Parse(*targetURL)
+	testServer := testutil.StartTestServer(999999, 100)
+	targetURL, err := url.Parse(testServer.URL)
 	if err != nil {
-		log.Fatalf("Invalid target URL: %v", err)
+		log.Fatal(err)
 	}
-
-	reverseProxy := proxy.NewStreamingReverseProxy(target)
+	reverseProxy := proxy.NewStreamingReverseProxy(targetURL)
 	log.Fatal(http.ListenAndServe(*listenAddr, reverseProxy))
 }
