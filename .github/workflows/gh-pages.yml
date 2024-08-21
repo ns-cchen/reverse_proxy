@@ -18,7 +18,7 @@ jobs:
         with:
           PRUNE_COUNT: 5
           SUBDIRECTORY: ./internal/proxy
-          GO_TEST_FLAGS: -cpu 1
+          GO_TEST_FLAGS: -cpu 1 -timeout 0 -benchtime=10m
           PUBLISH: true
           PUBLISH_BRANCH: gh-pages
         env:
