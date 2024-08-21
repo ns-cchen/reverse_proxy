@@ -1,5 +1,0 @@
-[
-  {"Version":"0ea9569de79067f35871d84665a65c5a84115a8e","Date":1724220662,"Tags":["ref=refs/heads/main"],"Suites":[{"Goos":"linux","Goarch":"amd64","Pkg":"reverse_proxy/internal/proxy","Benchmarks":[{"Name":"BenchmarkStreamingDecompression/Size-100","Runs":1,"NsPerOp":5260164206,"Mem":{"BytesPerOp":1950312,"AllocsPerOp":2225,"MBPerSec":0}},{"Name":"BenchmarkStreamingDecompression/Size-100-2","Runs":1,"NsPerOp":5224452157,"Mem":{"BytesPerOp":1925472,"AllocsPerOp":2189,"MBPerSec":0}},{"Name":"BenchmarkStreamingDecompression/Size-1000","Runs":1,"NsPerOp":50353963816,"Mem":{"BytesPerOp":7244672,"AllocsPerOp":18406,"MBPerSec":0}},{"Name":"BenchmarkStreamingDecompression/Size-1000-2","Runs":1,"NsPerOp":49235005825,"Mem":{"BytesPerOp":7243488,"AllocsPerOp":18411,"MBPerSec":0}}]}]},
-  {"Version":"6a7dc6d81cb979d8e36fe95c70dd2fefa281b627","Date":1724216758,"Tags":["ref=refs/heads/main"],"Suites":[]},
-  {"Version":"b3166b5cb53c409cb68c066a9dffb71464f0aedb","Date":1724216559,"Tags":["ref=refs/heads/main"],"Suites":[]}
-]
