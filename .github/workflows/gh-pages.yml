@@ -33,7 +33,6 @@ jobs:
           git fetch origin
           git checkout gh-pages
           go install go.bobheadxi.dev/gobenchdata@latest
-          $(go env GOPATH)/bin/gobenchdata web generate --web.config-only .
           $(go env GOPATH)/bin/gobenchdata web generate .
           if [[ -n $(git status --porcelain) ]]; then
             git add .
