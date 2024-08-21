@@ -11,7 +11,7 @@ import (
 )
 
 func BenchmarkStreamingDecompression(b *testing.B) {
-	pairs := [][2]int{{100, 100}, {1000, 100}, {10000, 100}}
+	pairs := [][2]int{{100, 100}, {1000, 100}}
 
 	for _, pair := range pairs {
 		b.Run(fmt.Sprintf("Size-%d", pair[0]), func(b *testing.B) {
