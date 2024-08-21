@@ -38,6 +38,7 @@ func TestStreamingDecompression(t *testing.T) {
 
 	assert.Equal(t, "application/json", response.Header.Get("Content-Type"))
 	assert.Equal(t, []string{"chunked"}, response.TransferEncoding)
+	assert.Equal(t, int64(-1), response.ContentLength)
 	assert.Empty(t, response.Header.Get("Content-Encoding"))
 	assert.Empty(t, response.Header.Get("Content-Length"))
 
