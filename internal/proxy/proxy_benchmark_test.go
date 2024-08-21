@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"runtime"
 	"testing"
 
 	"reverse_proxy/internal/testutil"
@@ -25,12 +24,6 @@ func BenchmarkStreamingDecompression(b *testing.B) {
 			defer proxyServer.Close()
 
 			b.ResetTimer()
-
-			var m runtime.MemStats
-			runtime.ReadMemStats(&m)
-			beforeAlloc := m.TotalAlloc
-			beforeHeapAlloc := m.HeapAlloc
-
 			for i := 0; i < b.N; i++ {
 				client := &http.Client{}
 				req, _ := http.NewRequest("GET", proxyServer.URL, nil)
@@ -39,13 +32,6 @@ func BenchmarkStreamingDecompression(b *testing.B) {
 				_, _ = testutil.VerifyStreamingDecompression(resp.Body)
 				_ = resp.Body.Close()
 			}
-
-			runtime.ReadMemStats(&m)
-			afterAlloc := m.TotalAlloc
-			afterHeapAlloc := m.HeapAlloc
-
-			b.ReportMetric(float64(afterAlloc-beforeAlloc)/float64(b.N), "avg_bytes_alloc/op")
-			b.ReportMetric(float64(afterHeapAlloc-beforeHeapAlloc)/float64(b.N), "avg_heap_bytes/op")
 		})
 	}
 }
