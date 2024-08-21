@@ -16,7 +16,7 @@ jobs:
       - name: Upload benchmark data
         uses: ns-cchen/gobenchdata@v1
         with:
-          PRUNE_COUNT: 30
+          PRUNE_COUNT: 5
           SUBDIRECTORY: ./internal/proxy
           GO_TEST_FLAGS: -cpu 1
           PUBLISH: true
