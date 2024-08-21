@@ -1,0 +1,58 @@
+[
+  {
+    "Version": "121677dc3c1674f11cdd2fb006aa4178968b6594",
+    "Date": 1724221690,
+    "Tags": [
+      "ref=refs/heads/main"
+    ],
+    "Suites": [
+      {
+        "Goos": "linux",
+        "Goarch": "amd64",
+        "Pkg": "reverse_proxy/internal/proxy",
+        "Benchmarks": [
+          {
+            "Name": "BenchmarkStreamingDecompression/Size-100",
+            "Runs": 1,
+            "NsPerOp": 4825812294,
+            "Mem": {
+              "BytesPerOp": 1950336,
+              "AllocsPerOp": 2226,
+              "MBPerSec": 0
+            }
+          },
+          {
+            "Name": "BenchmarkStreamingDecompression/Size-100-2",
+            "Runs": 1,
+            "NsPerOp": 5727623616,
+            "Mem": {
+              "BytesPerOp": 1926408,
+              "AllocsPerOp": 2192,
+              "MBPerSec": 0
+            }
+          },
+          {
+            "Name": "BenchmarkStreamingDecompression/Size-1000",
+            "Runs": 1,
+            "NsPerOp": 52493605905,
+            "Mem": {
+              "BytesPerOp": 7243096,
+              "AllocsPerOp": 18406,
+              "MBPerSec": 0
+            }
+          },
+          {
+            "Name": "BenchmarkStreamingDecompression/Size-1000-2",
+            "Runs": 1,
+            "NsPerOp": 47660773166,
+            "Mem": {
+              "BytesPerOp": 7243328,
+              "AllocsPerOp": 18411,
+              "MBPerSec": 0
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
