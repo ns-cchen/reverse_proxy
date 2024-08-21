@@ -1,19 +1,19 @@
 package testutil
 
 import (
-	"bytes"
 	"compress/gzip"
 	"encoding/json"
+	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"time"
 
-	"github.com/brianvoe/gofakeit/v7"
-	"github.com/brianvoe/gofakeit/v7/source"
+	"github.com/brianvoe/gofakeit/v6"
 )
 
-type TestObject struct {
+type FakeObject struct {
 	ID        int     `json:"id"`
 	Name      string  `json:"name"`
 	Email     string  `json:"email"`
@@ -29,7 +29,6 @@ func StartTestServer(size int, timeUpperBoundInMillisecond int) *httptest.Server
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Content-Encoding", "gzip")
-		w.WriteHeader(http.StatusOK)
 
 		gzw, _ := gzip.NewWriterLevel(w, gzip.BestSpeed)
 		defer func(gzw *gzip.Writer) {
@@ -44,7 +43,7 @@ func StartTestServer(size int, timeUpperBoundInMillisecond int) *httptest.Server
 			if i > 0 {
 				_, _ = gzw.Write([]byte(","))
 			}
-			obj := generateRandomObject(i)
+			obj := generateFakeObject(i)
 			_ = encoder.Encode(obj)
 
 			_ = gzw.Flush()
@@ -57,10 +56,10 @@ func StartTestServer(size int, timeUpperBoundInMillisecond int) *httptest.Server
 	}))
 }
 
-func generateRandomObject(id int) TestObject {
-	faker := gofakeit.NewFaker(source.NewCrypto(), true)
+func generateFakeObject(id int) FakeObject {
+	faker := gofakeit.New(0)
 
-	return TestObject{
+	return FakeObject{
 		ID:        id,
 		Name:      faker.Name(),
 		Email:     faker.Email(),
@@ -73,20 +72,38 @@ func generateRandomObject(id int) TestObject {
 	}
 }
 
-func GenerateTestData(size int) []byte {
-	var buf bytes.Buffer
-	gzw := gzip.NewWriter(&buf)
-	encoder := json.NewEncoder(gzw)
+func ReadBody(r io.Reader) (int64, error) {
+	buffer := make([]byte, 4096)
+	totalBytes := int64(0)
+	startTime := time.Now()
+	lastReportTime := startTime
+	lastReportBytes := int64(0)
 
-	_, _ = gzw.Write([]byte("["))
-	for i := 0; i < size; i++ {
-		if i > 0 {
-			_, _ = gzw.Write([]byte(","))
+	for {
+		n, err := r.Read(buffer)
+		totalBytes += int64(n)
+
+		if time.Since(lastReportTime) >= time.Second {
+			bytesPerSecond := (totalBytes - lastReportBytes) / int64(time.Since(lastReportTime).Seconds())
+			fmt.Printf("Received %d bytes. Current speed: %d bytes/second\n", totalBytes, bytesPerSecond)
+			lastReportTime = time.Now()
+			lastReportBytes = totalBytes
 		}
-		obj := generateRandomObject(i)
-		_ = encoder.Encode(obj)
+
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return totalBytes, fmt.Errorf("error reading stream: %v", err)
+		}
 	}
-	_, _ = gzw.Write([]byte("]"))
-	_ = gzw.Close()
-	return buf.Bytes()
+
+	duration := time.Since(startTime)
+	avgSpeed := float64(totalBytes) / duration.Seconds()
+
+	fmt.Printf("Total bytes received: %d\n", totalBytes)
+	fmt.Printf("Total time: %v\n", duration)
+	fmt.Printf("Average speed: %.2f bytes/second\n", avgSpeed)
+
+	return totalBytes, nil
 }

@@ -1,0 +1,44 @@
+name: github pages
+
+on:
+  push:
+
+jobs:
+  benchmark:
+    name: Run benchmarks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload benchmark data
+        uses: ns-cchen/gobenchdata@v1
+        with:
+          PRUNE_COUNT: 30
+          SUBDIRECTORY: ./internal/proxy
+          GO_TEST_FLAGS: -cpu 1
+          PUBLISH: true
+          PUBLISH_BRANCH: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Generate visualization on gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --local user.name "$GITHUB_ACTOR"
+          git fetch origin
+          git checkout gh-pages
+          go install go.bobheadxi.dev/gobenchdata@latest
+          $(go env GOPATH)/bin/gobenchdata web generate --web.config-only .
+          $(go env GOPATH)/bin/gobenchdata web generate .
+          if [[ -n $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "Update benchmark visualization"
+            git push origin gh-pages
+          else
+            echo "No changes to commit. Skipping push."
+          fi

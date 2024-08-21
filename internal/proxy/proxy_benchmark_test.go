@@ -2,17 +2,17 @@ package proxy
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"runtime"
 	"testing"
 
 	"reverse_proxy/internal/testutil"
 )
 
 func BenchmarkStreamingDecompression(b *testing.B) {
-	pairs := [][2]int{{100, 100}, {1000, 100}, {10000, 100}}
+	pairs := [][2]int{{10, 100}, {100, 100}, {1000, 100}, {10000, 100}}
 
 	for _, pair := range pairs {
 		b.Run(fmt.Sprintf("Size-%d", pair[0]), func(b *testing.B) {
@@ -25,27 +25,42 @@ func BenchmarkStreamingDecompression(b *testing.B) {
 			defer proxyServer.Close()
 
 			b.ResetTimer()
-
-			var m runtime.MemStats
-			runtime.ReadMemStats(&m)
-			beforeAlloc := m.TotalAlloc
-			beforeHeapAlloc := m.HeapAlloc
-
 			for i := 0; i < b.N; i++ {
 				client := &http.Client{}
-				req, _ := http.NewRequest("GET", proxyServer.URL, nil)
-				resp, _ := client.Do(req)
+				req, err := http.NewRequest("GET", proxyServer.URL, nil)
+				if err != nil {
+					b.Fatal(err)
+				}
 
-				_, _ = testutil.VerifyStreamingDecompression(resp.Body)
-				_ = resp.Body.Close()
+				resp, err := client.Do(req)
+				if err != nil {
+					b.Fatal(err)
+				}
+
+				err = consumeBody(resp.Body)
+				if err != nil {
+					b.Fatal(err)
+				}
+
+				err = resp.Body.Close()
+				if err != nil {
+					b.Fatal(err)
+				}
 			}
-
-			runtime.ReadMemStats(&m)
-			afterAlloc := m.TotalAlloc
-			afterHeapAlloc := m.HeapAlloc
-
-			b.ReportMetric(float64(afterAlloc-beforeAlloc)/float64(b.N), "avg_bytes_alloc/op")
-			b.ReportMetric(float64(afterHeapAlloc-beforeHeapAlloc)/float64(b.N), "avg_heap_bytes/op")
 		})
 	}
+}
+
+func consumeBody(body io.ReadCloser) error {
+	buffer := make([]byte, 4096)
+	for {
+		_, err := body.Read(buffer)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

@@ -20,29 +20,32 @@ func TestStreamingDecompression(t *testing.T) {
 	testServer := testutil.StartTestServer(100, 100)
 	defer testServer.Close()
 
-	targetURL, _ := url.Parse(testServer.URL)
+	targetURL, err := url.Parse(testServer.URL)
+	assert.NoError(t, err)
 	proxy := NewStreamingReverseProxy(targetURL)
 	proxyServer := httptest.NewServer(proxy)
 	defer proxyServer.Close()
 
-	req, _ := http.NewRequest("GET", proxyServer.URL, nil)
+	request, err := http.NewRequest("GET", proxyServer.URL, nil)
+	assert.NoError(t, err)
 	client := &http.Client{}
-	resp, _ := client.Do(req)
-	require.NotNil(t, resp)
+	response, err := client.Do(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
-	}(resp.Body)
+	}(response.Body)
 
-	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
-	assert.Empty(t, resp.Header.Get("Content-Encoding"))
+	assert.Equal(t, "application/json", response.Header.Get("Content-Type"))
+	assert.Equal(t, []string{"chunked"}, response.TransferEncoding)
+	assert.Empty(t, response.Header.Get("Content-Encoding"))
+	assert.Empty(t, response.Header.Get("Content-Length"))
 
-	totalBytes, _ := testutil.VerifyStreamingDecompression(resp.Body)
+	totalBytes, _ := testutil.ReadBody(response.Body)
 	assert.NotZero(t, totalBytes)
 }
 
 func TestProxyModifyResponse(t *testing.T) {
-	proxy := &StreamingReverseProxy{}
-
 	tests := []struct {
 		name            string
 		contentEncoding string
@@ -74,35 +77,32 @@ func TestProxyModifyResponse(t *testing.T) {
 				contentLength = len(tt.body)
 			}
 
-			res := &http.Response{
+			response := &http.Response{
 				Header:        make(http.Header),
 				Body:          body,
 				ContentLength: int64(contentLength),
 			}
 			if tt.contentEncoding != "" {
-				res.Header.Set("Content-Encoding", tt.contentEncoding)
+				response.Header.Set("Content-Encoding", tt.contentEncoding)
 			}
-			res.Header.Set("Content-Length", strconv.Itoa(contentLength))
+			response.Header.Set("Content-Length", strconv.Itoa(contentLength))
 
-			err := proxy.ModifyResponse(res)
+			err := ModifyResponse(response)
 			require.NoError(t, err)
 
 			if tt.expectedRemoved {
-				assert.Empty(t, res.Header.Get("Content-Encoding"))
-				assert.Empty(t, res.Header.Get("Content-Length"))
-				assert.Equal(t, int64(len(tt.expectedBody)), res.ContentLength)
-
-				// Check the actual body content
-				bodyContent, err := io.ReadAll(res.Body)
+				assert.Empty(t, response.Header.Get("Content-Encoding"))
+				assert.Empty(t, response.Header.Get("Content-Length"))
+				assert.Equal(t, "chunked", response.Header.Get("Transfer-Encoding"))
+				assert.Equal(t, int64(-1), response.ContentLength)
+				bodyContent, err := io.ReadAll(response.Body)
 				require.NoError(t, err)
 				assert.Equal(t, tt.expectedBody, string(bodyContent))
 			} else {
-				assert.Equal(t, tt.contentEncoding, res.Header.Get("Content-Encoding"))
-				assert.Equal(t, strconv.Itoa(contentLength), res.Header.Get("Content-Length"))
-				assert.Equal(t, int64(contentLength), res.ContentLength)
-
-				// Check that the body is unchanged
-				bodyContent, err := io.ReadAll(res.Body)
+				assert.Equal(t, tt.contentEncoding, response.Header.Get("Content-Encoding"))
+				assert.Equal(t, strconv.Itoa(contentLength), response.Header.Get("Content-Length"))
+				assert.Equal(t, int64(contentLength), response.ContentLength)
+				bodyContent, err := io.ReadAll(response.Body)
 				require.NoError(t, err)
 				assert.Equal(t, tt.body, string(bodyContent))
 			}
