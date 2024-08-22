@@ -31,7 +31,7 @@ jobs:
 
       - name: Start Mock Server
         run: |
-          ./mock_server -size 100 &
+          ./mock_server -size 100 -time 10 &
           echo $! > mock_server.pid
           sleep 5
 
