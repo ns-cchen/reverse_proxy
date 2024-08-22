@@ -34,7 +34,7 @@ jobs:
 
       - name: Start Reverse Proxy
         run: |
-          ./reverse_proxy -target http://localhost:8080 -port 8000 &
+          ./main_server -target http://localhost:8080 -port 8000 &
           echo $! > main_server.pid
           sleep 5
 
