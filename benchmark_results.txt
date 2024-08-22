@@ -1,0 +1,7 @@
+goos: linux
+goarch: amd64
+pkg: reverse_proxy/internal/benchmark
+cpu: AMD EPYC 7763 64-Core Processor                
+BenchmarkApiConcurrent/Requests-1-4         	       1	 616594103 ns/op	  240616 B/op	     375 allocs/op
+PASS
+ok  	reverse_proxy/internal/benchmark	0.623s

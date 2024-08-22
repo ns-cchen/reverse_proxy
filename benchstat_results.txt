@@ -1,0 +1,18 @@
+goos: linux
+goarch: amd64
+pkg: reverse_proxy/internal/benchmark
+cpu: AMD EPYC 7763 64-Core Processor                
+                           │ benchmark_results.txt │
+                           │        sec/op         │
+ApiConcurrent/Requests-1-4            616.6m ± ∞ ¹
+¹ need >= 6 samples for confidence interval at level 0.95
+
+                           │ benchmark_results.txt │
+                           │         B/op          │
+ApiConcurrent/Requests-1-4           235.0Ki ± ∞ ¹
+¹ need >= 6 samples for confidence interval at level 0.95
+
+                           │ benchmark_results.txt │
+                           │       allocs/op       │
+ApiConcurrent/Requests-1-4             375.0 ± ∞ ¹
+¹ need >= 6 samples for confidence interval at level 0.95
