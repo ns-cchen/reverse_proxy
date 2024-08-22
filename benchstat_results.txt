@@ -2,17 +2,62 @@ goos: linux
 goarch: amd64
 pkg: reverse_proxy/internal/benchmark
 cpu: AMD EPYC 7763 64-Core Processor                
-                           │ benchmark_results.txt │
-                           │        sec/op         │
-ApiConcurrent/Requests-1-4            616.6m ± ∞ ¹
+                            │ benchmark_results.txt │
+                            │        sec/op         │
+ApiConcurrent10Request                 671.1m ± ∞ ¹
+ApiConcurrent10Request-2               694.0m ± ∞ ¹
+ApiConcurrent10Request-4               660.8m ± ∞ ¹
+ApiConcurrent100Request                 2.226 ± ∞ ¹
+ApiConcurrent100Request-2               2.010 ± ∞ ¹
+ApiConcurrent100Request-4               2.227 ± ∞ ¹
+ApiConcurrent1000Request                17.51 ± ∞ ¹
+ApiConcurrent1000Request-2              17.22 ± ∞ ¹
+ApiConcurrent1000Request-4              16.78 ± ∞ ¹
+ApiConcurrent10000Request               167.0 ± ∞ ¹
+ApiConcurrent10000Request-2             165.4 ± ∞ ¹
+ApiConcurrent10000Request-4             165.7 ± ∞ ¹
+Api                                     1.401 ± ∞ ¹
+Api-2                                   1.498 ± ∞ ¹
+Api-4                                   1.367 ± ∞ ¹
+geomean                                 5.674
 ¹ need >= 6 samples for confidence interval at level 0.95
 
-                           │ benchmark_results.txt │
-                           │         B/op          │
-ApiConcurrent/Requests-1-4           235.0Ki ± ∞ ¹
+                            │ benchmark_results.txt │
+                            │         B/op          │
+ApiConcurrent10Request                59.23Ki ± ∞ ¹
+ApiConcurrent10Request-2              58.68Ki ± ∞ ¹
+ApiConcurrent10Request-4              58.90Ki ± ∞ ¹
+ApiConcurrent100Request               420.1Ki ± ∞ ¹
+ApiConcurrent100Request-2             444.6Ki ± ∞ ¹
+ApiConcurrent100Request-4             406.3Ki ± ∞ ¹
+ApiConcurrent1000Request              3.320Mi ± ∞ ¹
+ApiConcurrent1000Request-2            3.251Mi ± ∞ ¹
+ApiConcurrent1000Request-4            3.320Mi ± ∞ ¹
+ApiConcurrent10000Request             31.82Mi ± ∞ ¹
+ApiConcurrent10000Request-2           32.32Mi ± ∞ ¹
+ApiConcurrent10000Request-4           32.05Mi ± ∞ ¹
+Api                                   7.062Ki ± ∞ ¹
+Api-2                                 7.403Ki ± ∞ ¹
+Api-4                                 7.477Ki ± ∞ ¹
+geomean                               458.3Ki
 ¹ need >= 6 samples for confidence interval at level 0.95
 
-                           │ benchmark_results.txt │
-                           │       allocs/op       │
-ApiConcurrent/Requests-1-4             375.0 ± ∞ ¹
+                            │ benchmark_results.txt │
+                            │       allocs/op       │
+ApiConcurrent10Request                  407.0 ± ∞ ¹
+ApiConcurrent10Request-2                399.0 ± ∞ ¹
+ApiConcurrent10Request-4                394.0 ± ∞ ¹
+ApiConcurrent100Request                2.818k ± ∞ ¹
+ApiConcurrent100Request-2              2.990k ± ∞ ¹
+ApiConcurrent100Request-4              2.699k ± ∞ ¹
+ApiConcurrent1000Request               22.37k ± ∞ ¹
+ApiConcurrent1000Request-2             21.83k ± ∞ ¹
+ApiConcurrent1000Request-4             22.33k ± ∞ ¹
+ApiConcurrent10000Request              213.3k ± ∞ ¹
+ApiConcurrent10000Request-2            217.1k ± ∞ ¹
+ApiConcurrent10000Request-4            215.0k ± ∞ ¹
+Api                                     44.00 ± ∞ ¹
+Api-2                                   48.00 ± ∞ ¹
+Api-4                                   45.00 ± ∞ ¹
+geomean                                3.009k
 ¹ need >= 6 samples for confidence interval at level 0.95
