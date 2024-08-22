@@ -31,7 +31,7 @@ jobs:
 
       - name: Start Mock Server
         run: |
-          ./mock_server -size 9999 &
+          ./mock_server -size 100 &
           echo $! > mock_server.pid
           sleep 5
 
@@ -57,17 +57,17 @@ jobs:
           go tool pprof -svg -output cpu.svg cpu.prof
           go tool pprof -svg -output mem.svg mem.prof
 
-
-
       - name: Prepare gh-pages content
         run: |
           mkdir -p gh-pages
           mv benchmark_results.txt benchstat_results.txt cpu.svg mem.svg gh-pages/
           echo "<html><body><h1>Benchmark Reports</h1><ul>" > gh-pages/index.html
           for file in gh-pages/*; do
-          echo "<li><a href='$(basename $file)'>$(basename $file)</a></li>" >> gh-pages/index.html
+            if [ "$(basename "$file")" != "index.html" ]; then
+              echo "<li><a href='$(basename "$file")'>$(basename "$file")</a></li>" >> gh-pages/index.html
+            fi
           done
-          echo "</ul></body></html>" >> gh-pages/index.html          
+          echo "</ul></body></html>" >> gh-pages/index.html
 
       - name: Upload benchmark results
         uses: peaceiris/actions-gh-pages@v4
