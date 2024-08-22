@@ -44,8 +44,8 @@ jobs:
 
       - name: Stop servers
         run: |
-          kill $(cat mock_server.pid)
-          kill $(cat main_server.pid)
+          cat mock_server.pid | xargs kill || echo "Failed to kill mock server process"
+          cat main_server.pid | xargs kill || echo "Failed to kill main server process"
 
       - name: Generate profile report
         run: |
