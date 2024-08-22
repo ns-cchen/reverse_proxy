@@ -25,6 +25,42 @@ type FakeObject struct {
 	Country   string  `json:"country"`
 }
 
+func StartMockServer(size int, timeUpperBoundInMillisecond int) *http.Server {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Encoding", "gzip")
+
+		gzw, _ := gzip.NewWriterLevel(w, gzip.BestSpeed)
+		defer func(gzw *gzip.Writer) {
+			_ = gzw.Close()
+		}(gzw)
+
+		encoder := json.NewEncoder(gzw)
+		flusher, _ := w.(http.Flusher)
+
+		_, _ = gzw.Write([]byte("["))
+		for i := 0; i < size; i++ {
+			if i > 0 {
+				_, _ = gzw.Write([]byte(","))
+			}
+			obj := generateFakeObject(i)
+			_ = encoder.Encode(obj)
+
+			_ = gzw.Flush()
+			flusher.Flush()
+			time.Sleep(time.Duration(rand.Intn(timeUpperBoundInMillisecond)) * time.Millisecond)
+		}
+		_, _ = gzw.Write([]byte("]"))
+		_ = gzw.Flush()
+		flusher.Flush()
+	})
+	server := &http.Server{
+		Handler: handler,
+	}
+
+	return server
+}
+
 func StartTestServer(size int, timeUpperBoundInMillisecond int) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
