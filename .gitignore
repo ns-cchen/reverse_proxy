@@ -207,6 +207,5 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-*.prof
-main_server
-mock_server
+
+.idea

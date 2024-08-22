@@ -31,7 +31,7 @@ jobs:
 
       - name: Start Mock Server
         run: |
-          ./mock_server -size 10 &
+          ./mock_server -size 9999 &
           echo $! > mock_server.pid
           sleep 5
 
@@ -43,7 +43,7 @@ jobs:
 
       - name: Run benchmarks
         run: |
-          go test ./internal/benchmark -bench=BenchmarkApiConcurrent -timeout 0 -benchtime=1x -benchmem -cpuprofile=cpu.prof -memprofile=mem.prof | tee benchmark_results.txt
+          go test ./internal/benchmark -bench=. -run=^$ -cpu 1,2,4 -timeout 0 -benchtime=1x -benchmem -cpuprofile=cpu.prof -memprofile=mem.prof | tee benchmark_results.txt
 
       - name: Stop servers
         run: |
