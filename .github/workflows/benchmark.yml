@@ -40,7 +40,7 @@ jobs:
 
       - name: Run benchmarks
         run: |
-          go test ./internal/benchmark -bench=BenchmarkApiConcurrent -benchtime=1x -benchmem -cpuprofile=cpu.prof -memprofile=mem.prof | tee benchmark_results.txt
+          go test ./internal/benchmark -bench=BenchmarkApiConcurrent -timeout 0 -benchtime=1x -benchmem -cpuprofile=cpu.prof -memprofile=mem.prof | tee benchmark_results.txt
 
       - name: Stop servers
         run: |
@@ -51,8 +51,18 @@ jobs:
         run: |
           go install golang.org/x/perf/cmd/benchstat@latest
           $(go env GOPATH)/bin/benchstat benchmark_results.txt > benchstat_results.txt
-          go tool pprof -output cpu_profile.html cpu.prof
-          go tool pprof -output mem_profile.html mem.prof
+          if [ -s cpu.prof ]; then
+            go tool pprof -output cpu_profile.html cpu.prof
+          else
+            echo "CPU profile is empty. No profile generated."
+          fi
+          
+          if [ -s mem.prof ]; then
+            go tool pprof -output mem_profile.html mem.prof
+          else
+            echo "Memory profile is empty. No profile generated."
+          fi
+
 
       - name: Prepare gh-pages content
         run: |
