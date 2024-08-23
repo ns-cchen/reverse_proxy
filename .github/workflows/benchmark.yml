@@ -43,7 +43,7 @@ jobs:
 
       - name: Run benchmarks
         run: |
-          go test ./internal/benchmark -bench=. -run=^$ -cpu 1,2,4 -timeout 0 -benchtime=3x -benchmem -cpuprofile=cpu.prof -memprofile=mem.prof | tee benchmark_results.txt
+          go test ./internal/benchmark -bench=. -run=^$ -cpu 1,2,4 -timeout 0 -benchtime=10x -benchmem -cpuprofile=cpu.prof -memprofile=mem.prof | tee benchmark_results.txt
 
       - name: Stop servers
         run: |
