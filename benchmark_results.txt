@@ -2,20 +2,20 @@ goos: linux
 goarch: amd64
 pkg: reverse_proxy/internal/benchmark
 cpu: AMD EPYC 7763 64-Core Processor                
-BenchmarkApiConcurrent10Request        	       3	 671110201 ns/op	   60650 B/op	     407 allocs/op
-BenchmarkApiConcurrent10Request-2      	       3	 694034891 ns/op	   60085 B/op	     399 allocs/op
-BenchmarkApiConcurrent10Request-4      	       3	 660846711 ns/op	   60314 B/op	     394 allocs/op
-BenchmarkApiConcurrent100Request       	       3	2225543462 ns/op	  430181 B/op	    2818 allocs/op
-BenchmarkApiConcurrent100Request-2     	       3	2009819734 ns/op	  455312 B/op	    2990 allocs/op
-BenchmarkApiConcurrent100Request-4     	       3	2226676663 ns/op	  416056 B/op	    2699 allocs/op
-BenchmarkApiConcurrent1000Request      	       3	17512306625 ns/op	 3481632 B/op	   22366 allocs/op
-BenchmarkApiConcurrent1000Request-2    	       3	17216588683 ns/op	 3408722 B/op	   21826 allocs/op
-BenchmarkApiConcurrent1000Request-4    	       3	16782036691 ns/op	 3480997 B/op	   22333 allocs/op
-BenchmarkApiConcurrent10000Request     	       3	167000412375 ns/op	33369133 B/op	  213321 allocs/op
-BenchmarkApiConcurrent10000Request-2   	       3	165370788711 ns/op	33895016 B/op	  217098 allocs/op
-BenchmarkApiConcurrent10000Request-4   	       3	165681464444 ns/op	33608349 B/op	  215043 allocs/op
-BenchmarkApi                           	       3	1400810087 ns/op	    7232 B/op	      44 allocs/op
-BenchmarkApi-2                         	       3	1498282807 ns/op	    7581 B/op	      48 allocs/op
-BenchmarkApi-4                         	       3	1367023742 ns/op	    7656 B/op	      45 allocs/op
+BenchmarkApiConcurrent10Request        	      10	 195973857 ns/op	   18316 B/op	     123 allocs/op
+BenchmarkApiConcurrent10Request-2      	      10	 197153774 ns/op	   18158 B/op	     120 allocs/op
+BenchmarkApiConcurrent10Request-4      	      10	 173937754 ns/op	   18172 B/op	     120 allocs/op
+BenchmarkApiConcurrent100Request       	      10	 596157370 ns/op	  137257 B/op	     904 allocs/op
+BenchmarkApiConcurrent100Request-2     	      10	 619981710 ns/op	  130944 B/op	     854 allocs/op
+BenchmarkApiConcurrent100Request-4     	      10	 670826933 ns/op	  127987 B/op	     830 allocs/op
+BenchmarkApiConcurrent1000Request      	      10	5152346043 ns/op	 1025524 B/op	    6576 allocs/op
+BenchmarkApiConcurrent1000Request-2    	      10	4983553621 ns/op	 1047737 B/op	    6701 allocs/op
+BenchmarkApiConcurrent1000Request-4    	      10	5256600414 ns/op	 1020277 B/op	    6535 allocs/op
+BenchmarkApiConcurrent10000Request     	      10	49830454007 ns/op	10118881 B/op	   64811 allocs/op
+BenchmarkApiConcurrent10000Request-2   	      10	50316638414 ns/op	10050924 B/op	   64311 allocs/op
+BenchmarkApiConcurrent10000Request-4   	      10	50066166107 ns/op	10107998 B/op	   64686 allocs/op
+BenchmarkApi                           	      10	1426459557 ns/op	    7136 B/op	      42 allocs/op
+BenchmarkApi-2                         	      10	1418362634 ns/op	    7260 B/op	      44 allocs/op
+BenchmarkApi-4                         	      10	1402673679 ns/op	    7332 B/op	      44 allocs/op
 PASS
-ok  	reverse_proxy/internal/benchmark	3373.717s
+ok  	reverse_proxy/internal/benchmark	3401.288s
